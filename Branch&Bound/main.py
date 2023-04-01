@@ -31,6 +31,7 @@ start_time = time.time()
 proccess = psutil.Process()  
 # Read input from file
 with open('Branch&Bound/TEST_CASE/INPUT_2.txt', 'r') as f:
+with open('Branch&Bound./TEST_CASE./INPUT_2.txt', 'r') as f:
     W = float(f.readline())   # Knapsack capacity
     m = int(f.readline())     # Number of classes
     weights = list(map(float, f.readline().strip().split(',')))   
@@ -42,6 +43,7 @@ best_value, best_selected = Branch_And_Bound(W, m, weights, values, classes)
 
 # Write output to file
 with open('Branch&Bound/RESULT/OUTPUT_2.txt', 'w') as f:
+with open('Branch&Bound./RESULT./OUTPUT_2.txt', 'w') as f:
     f.write(str(best_value) + '\n')
     f.write(' '.join(map(str, best_selected)) + '\n')
     end_time = time.time()
