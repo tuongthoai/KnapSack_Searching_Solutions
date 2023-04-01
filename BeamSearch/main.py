@@ -112,6 +112,9 @@ class BeamSearch:
         x = [0] * self.N
         w = 0
         v = 0
+        # this selection the top highest ratio of value to weight
+        # this gready initial chosen state is a very good initial state following
+        # Discrete Variable Extremum Problems. Dantzig, G.B. 1975
         for _, val in enumerate(self.value_by_weights):
             if w + self.weights[val[1]] < self.W:
                 x[val[1]] = 1
@@ -126,6 +129,7 @@ class BeamSearch:
             f_best = v
             x_best = x
 
+        # this part generate beam follow by the initial configuration
         for _ in range(self.MAX_BEAM_SIZE - 1):
             new_x, val = self.initBeam2(x)
             x_curr.append(new_x)
