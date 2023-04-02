@@ -4,7 +4,6 @@
 import heapq
 import random
 import time
-
 import numpy as np
 
 
@@ -24,13 +23,22 @@ class BeamSearch:
         f.close()
 
         self.N = len(self.values)
-        self.MAX_BEAM_SIZE = self.N
+        self.MAX_BEAM_SIZE = 100
         self.ALPHA = min(self.values)
         self.MINIMUM_VALUE = min(self.values)
         self.MAX_RESTART_CNT = 10
 
         self.value_by_weights = [tuple([val / self.weights[i], i]) for i, val in enumerate(self.values)]
         self.value_by_weights.sort(key=lambda k: k[0], reverse=True)
+
+        self.vbw_dict = dict()
+
+        for i in range(1, self.N_type + 1):
+            self.vbw_dict[i] = []
+
+        for i, val in enumerate(self.value_by_weights):
+            var = self.vbw_dict[self.types[val[1]]]
+            var.append(val[1])
 
     def evaluate_profit(self, x: np.array) -> float:
         total_value = np.dot(x, self.values)
@@ -115,8 +123,20 @@ class BeamSearch:
         # this selection the top highest ratio of value to weight
         # this gready initial chosen state is a very good initial state following
         # Discrete Variable Extremum Problems. Dantzig, G.B. 1975
+
+        # this part ensure the inital x has enough class
+        for i in range(1, self.N_type + 1):
+            var = self.vbw_dict[i]
+            for id in var:
+                if w + self.weights[id] < self.W:
+                    x[id] = 1
+                    w += self.weights[id]
+                    v += self.values[id]
+                    break
+
+        # greedily add items into x
         for _, val in enumerate(self.value_by_weights):
-            if w + self.weights[val[1]] < self.W:
+            if w + self.weights[val[1]] < self.W and x[val[1]] == 0:
                 x[val[1]] = 1
                 w += self.weights[val[1]]
                 v += self.values[val[1]]
@@ -205,7 +225,7 @@ def main():
         t2 = time.time() - t1
         fout.write(f"{answer_profit}\n")
         write_array(fout, answer_cfg)
-        fout.write(str(t2))
+        print("RUNTIME: {}".format(t2))
         fout.close()
 
 
