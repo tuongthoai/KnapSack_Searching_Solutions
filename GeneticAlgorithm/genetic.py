@@ -45,6 +45,7 @@ class GeneticAlgorithm:
         return 0 if total_weight > self.max_weight or len(type_of_class) < self.num_classes else total_value
 
     def selection(self, population):
+        """FPS"""
         fitness_values = [(self.fitness(chromosome), chromosome)
                           for chromosome in population]
         return [chromosome for _, chromosome in heapq.nlargest(2, fitness_values)]
@@ -57,6 +58,7 @@ class GeneticAlgorithm:
         return child1, child2
 
     def mutation(self, solution):
+        """BIT FLIP MUTATION"""
         while(self.fitness(solution) == 0):
             mutation_point = random.randint(1, len(solution) - 1)
             solution[mutation_point] = 1 - solution[mutation_point]
@@ -82,6 +84,7 @@ class GeneticAlgorithm:
             f.write(", ".join(str(x) for x in best_chromosome))
 
     def get_best(self):
+        """Get best solution"""
         for chromosome in self.population:
             tmp = self.fitness(chromosome)
             if tmp > self.best_fitness:
